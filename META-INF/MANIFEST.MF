@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Data Migration Tool for z/OS
+Bundle-SymbolicName: net.sourceforge.datamig4zos;singleton:=true
+Bundle-Version: 6.3.1.v20141114
+Bundle-Activator: net.sourceforge.datamig4zos.Activator
+Bundle-Vendor: Peng Cheng Sun
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.help
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/hsqldb.jar,
+ lib/edtftpj.jar
+Import-Package: org.eclipse.ecf.core.util,
+ org.eclipse.ui.forms.events,
+ org.eclipse.ui.forms.widgets,
+ org.eclipse.ui.navigator

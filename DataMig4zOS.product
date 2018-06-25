@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Data Migration Tool for z/OS" uid="DataMig4zOS.product" id="net.sourceforge.datamig4zos.product" application="net.sourceforge.datamig4zos.application" version="6.3.1.v20141114" useFeatures="false" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="/DataMig4zOS/images/data-transport-lg.gif"/>
+      <text>
+         Data Migration Tool for z/OS
+
+Version: 6.3.1
+Build id: 20141114
+
+(c) 2008-2014 Peng Cheng Sun.  All rights reserved.
+Visit http://sourceforge.net/projects/datamig4zos/
+
+This product includes software developed by
+The Eclipse Foundation http://eclipse.org/
+The hsql Development Group http://hsqldb.org/
+Enterprise Distributed Technologies http://enterprisedt.com/
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="/DataMig4zOS/images/data-transport-icon-16.png" i32="/DataMig4zOS/images/data-transport-icon-32.png" i48="/DataMig4zOS/images/data-transport-icon-48.png" i64="/DataMig4zOS/images/data-transport-icon-64.png" i128="/DataMig4zOS/images/data-transport-icon-128.png"/>
+
+   <splash
+      location="net.sourceforge.datamig4zos"
+      startupProgressRect="5,252,400,15"
+      startupMessageRect="5,272,400,20"
+      startupForegroundColor="C0C0C0" />
+   <launcher name="datamig4zos">
+      <solaris/>
+      <win useIco="true">
+         <ico path="/DataMig4zOS/images/data-transport.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
+
+
+   <vm>
+   </vm>
+
+   <plugins>
+      <plugin id="com.ibm.icu"/>
+      <plugin id="javax.servlet"/>
+      <plugin id="javax.servlet.jsp"/>
+      <plugin id="net.sourceforge.datamig4zos"/>
+      <plugin id="org.apache.ant"/>
+      <plugin id="org.apache.commons.el"/>
+      <plugin id="org.apache.commons.logging"/>
+      <plugin id="org.apache.jasper"/>
+      <plugin id="org.apache.lucene"/>
+      <plugin id="org.apache.lucene.analysis"/>
+      <plugin id="org.apache.lucene.core"/>
+      <plugin id="org.eclipse.ant.core"/>
+      <plugin id="org.eclipse.core.commands"/>
+      <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.databinding.observable"/>
+      <plugin id="org.eclipse.core.databinding.property"/>
+      <plugin id="org.eclipse.core.expressions"/>
+      <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.runtime"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
+      <plugin id="org.eclipse.core.variables"/>
+      <plugin id="org.eclipse.ecf.identity"/>
+      <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.http.jetty"/>
+      <plugin id="org.eclipse.equinox.http.registry"/>
+      <plugin id="org.eclipse.equinox.http.servlet"/>
+      <plugin id="org.eclipse.equinox.jsp.jasper"/>
+      <plugin id="org.eclipse.equinox.jsp.jasper.registry"/>
+      <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.help"/>
+      <plugin id="org.eclipse.help.base"/>
+      <plugin id="org.eclipse.help.ui"/>
+      <plugin id="org.eclipse.help.webapp"/>
+      <plugin id="org.eclipse.jface"/>
+      <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.eclipse.swt"/>
+      <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.ui"/>
+      <plugin id="org.eclipse.ui.forms"/>
+      <plugin id="org.eclipse.ui.navigator"/>
+      <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="org.mortbay.jetty.server"/>
+      <plugin id="org.mortbay.jetty.util"/>
+   </plugins>
+
+
+</product>

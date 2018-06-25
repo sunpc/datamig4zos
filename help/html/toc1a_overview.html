@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Process overview</title>
+</head>
+
+<body>
+<h1>Process overview</h1>
+<p>The tool supports to migrate both DB2 tables and datasets from one z/OS server to another, and runs a query in batch mode. </p>
+<h2>Table migration process</h2>
+<p>The table migration process includes unload, FTP, and load steps.</p>
+<p>
+	<li>Allocates a control library on both source and target servers.</li>
+	<li>Submits an unload job to the source server to unload the data from the source table.</li>
+	<li>Once the unload is done, submits an FTP job to the target server to transmit the unloaded dataset.</li>
+	<li>Once the FTP is done, downloads the unload control card and use it to generate a load card.</li>
+	<li>Uploads the load card to the target server.</li>
+	<li>Once the upload is done, submits a load job to the target server to load the data into the target table.</li>
+	<li>Once the load is done, the process is complete.</li>
+</p>
+<h2>Dataset migration process</h2>
+<p>The dataset migration process includes an FTP step.</p>
+<p>
+	<li>Allocates a control library on both source and target servers.</li>
+	<li>Submits an FTP job to the target server to transmit the dataset.</li>
+	<li>Once the FTP is done, the process is complete.</li>
+</p>
+<h2>Database query process</h2>
+<p>The database query process includes query and download steps.</p>
+<p>
+	<li>Allocates a control library on the source server.</li>
+	<li>Submits a query job to the server to run the query.</li>
+	<li>Once the query is done, downloads the query results.</li>
+	<li>Displays the query results.</li>
+</p>
+<p>&nbsp;</p>
+</body>
+</html>

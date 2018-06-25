@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>JCL parameters</title>
+</head>
+
+<body>
+<h1>JCL parameters</h1>
+<p>Parameters needed on each JCL template:</p>
+<h2>Common parameters</h2>
+<p>
+<li><b>#PROCESS_ID#</b> : process id</li>
+<li><b>#JOB_NAME#</b> : job name - the last 6 chars of ProcessIdentifier with a 2-char prefix</li>
+<li><b>#BATCH_ID#</b> : job batch id</li>
+<li><b>#USER_ID#</b> : user id</li>
+<li><b>#CNTL_LIBRARY#</b> : control library</li>
+<li><b>#CNTL_MEMBER#</b> : control member name</li>
+<li><b>#DB2LOAD#</b> : DB2 load library</li>
+<li><b>#DSNLOAD#</b> : DSN load library</li>
+<li><b>#SORTLIB#</b> : sort exec library</li>
+<li><b>#SPACE#</b> : default space allocation</li>
+<li><b>#UNIT#</b> : default DASD unit</li>
+</p>
+<h2>Unload parameters</h2>
+<p>
+<li><b>#DB_SSID#</b> : database SSID</li>
+<li><b>#DB_NAME#</b> : database name</li>
+<li><b>#DB_SCHEMA#</b> : database schema</li>
+<li><b>#TS_NAME#</b> : tablespace name</li>
+<li><b>#TABLE_NAME#</b> : table name</li>
+<li><b>#DATASET_SYSPUNCH#</b> : sys punch file name</li>
+<li><b>#DATASET_SYSREC#</b> : sys rec file name</li>
+<li><b>#UNLOAD_SQL#</b> : unload SQL</li>
+</p>
+<h2>FTP parameters</h2>
+<p>
+<li><b>#HOST_NAME#</b> : remote host name</li>
+<li><b>#DS_NETRC_NAME#</b> : NETRC dataset name</li>
+<li><b>#DS_SOURCE_NAME#</b> : source dataset name</li>
+<li><b>#DS_TARGET_NAME#</b> : target dataset name</li>
+<li><b>#DS_SOURCE_PREFIX#</b> : source dataset prefix</li>
+<li><b>#DS_TARGET_PREFIX#</b> : target dataset prefix</li>
+<li><b>#DS_SOURCE_MEMBER#</b> : source dataset member</li>
+<li><b>#DS_TARGET_MEMBER#</b> : target dataset member</li>
+<li><b>#DS_LRECL#</b> : dataset rec length</li>
+<li><b>#DS_BLKSZ#</b> : dataset block size</li>
+<li><b>#DS_RECFM#</b> : dataset rec format</li>
+<li><b>#DS_SPACE#</b> : dataset space unit</li>
+<li><b>#DS_PRI#</b> : dataset primary space</li>
+<li><b>#DS_SEC#</b> : dataset secondary space</li>
+<li><b>#DS_UNIT#</b> : dataset device unit type</li>
+<li><b>#DS_UCOUNT#</b> : dataset device unit count</li>
+</p>
+<h2>Load parameters</h2>
+<p>
+<li><b>#DB_SSID#</b> : database SSID</li>
+<li><b>#DB_NAME#</b> : database name</li>
+<li><b>#DB_SCHEMA#</b> : database schema</li>
+<li><b>#TS_NAME#</b> : tablespace name</li>
+<li><b>#TABLE_NAME#</b> : table name</li>
+<li><b>#DATASET_SYSPUNCH#</b> : sys punch file name</li>
+<li><b>#DATASET_SYSREC#</b> : sys rec file name</li>
+<li><b>#DATASET_SYSDISCD#</b> : sys discard file name</li>
+</p>
+<h2>Query parameters</h2>
+<p>
+<li><b>#DB_SSID#</b> : database SSID</li>
+<li><b>#DB_SCHEMA#</b> : database schema</li>
+<li><b>#DATASET_OUTPUT#</b> : sys print file name</li>
+<li><b>#SQL_STMTS#</b> : sql statements</li>
+</p>
+<p>&nbsp;</p>
+</body>
+</html>

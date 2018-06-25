@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Start a data migration request</title>
+</head>
+
+<body>
+<h1>Start a data migration request</h1>
+<p>Select the menu <b>File</b> -> <b>New Data Migration Request</b> or the icon on the toolbar to start a data migration request. The <b>New Data Migration Request Wizard</b> will be then presented. <br />
+<b>Note:</b> The schema will be automatically selected if the server has only one schema defined in the tool. </p>
+<p><img src="images/new_migration_wizard_s1_v6r3.png" style="width:400px;" /></p>
+<p>After selected the servers and schemas, the migration items can be entered. Both table and dataset names can be entered here, with one item per line. <br />
+<b>Note:</b> At least one item has to been entered. </p>
+<p><img src="images/new_migration_wizard_s2_v6r3.png" style="width:400px;" /></p>
+<p>After entered table/dataset names, the table filters can be defined to migrate the required records only.</p>
+<p><img src="images/new_migration_wizard_s3_v6r3.png" style="width:400px;" /></p>
+<p>In the last step, there are options to be selected to finalize the request. </p>
+<p><img src="images/new_migration_wizard_s4_v6r3.png" style="width:400px;" /></p>
+<p>Finally, the data migration request is generated. </p>
+<p><img src="images/new_migration_editor.png" style="width:600px;" /></p>
+<p><b>Note:</b> The servers, schemas, and items are all editable on the data migration request editor. </p>
+<p>The table and dataset names can be replaced to match the server/schema naming convention by clicking the link <b>Replace table/dataset names</b>. </p>
+<p><img src="images/new_migration_replace_tbname.png" style="width:400px;" /></p>
+<p>The table unload criteria can be built by clicking the link <b>Build unload criteria</b>. Multiple tables can be applied with the same criteria. </p>
+<p><img src="images/new_migration_build_unload.png" style="width:400px;" /></p>
+<p>The unload criteria can be used directly as the unload SQL of each table. The unload SQL can be in one of the formats of the following. </p>
+<p>
+	<li>SELECT columns FROM table(s) WHERE where clause </li>
+	<li>FROM table(s) WHERE where clause </li>
+	<li>WHERE where clause </li>
+	<li>where clause</li>
+</p>
+<p>When everything is ready, click the <b>Run</b> button on the top-right to start the data migration.</p>
+<p>&nbsp;</p>
+</body>
+</html>

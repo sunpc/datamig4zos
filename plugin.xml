@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="net.sourceforge.datamig4zos.application"
+            name="Data Migration Tool for z/OS">
+         <property
+               name="windowImages"
+               value="images/data-transport-icon-16.png,images/data-transport-icon-32.png,images/data-transport-icon-48.png,images/data-transport-icon-64.png,images/data-transport-icon-128.png">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+         <property
+               name="appName"
+               value="Data Migration Tool for z/OS">
+         </property>
+         <property
+               name="aboutImage"
+               value="images/data-transport-lg.gif">
+         </property>
+         <property
+               name="aboutText"
+               value="Data Migration Tool for z/OS&#x0A;&#x0A;Version: 6.3.1&#x0A;Build id: 20141114&#x0A;&#x0A;(c) 2008-2014 Peng Cheng Sun.  All rights reserved.&#x0A;Visit http://sourceforge.net/projects/datamig4zos/&#x0A;&#x0A;This product includes software developed by&#x0A;The Eclipse Foundation http://eclipse.org/&#x0A;The hsql Development Group http://hsqldb.org/&#x0A;Enterprise Distributed Technologies http://enterprisedt.com/">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="C0C0C0">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="5,272,400,20">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="5,252,400,15">
+         </property>
+      </product>
+   </extension>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="net.sourceforge.datamig4zos.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Data Migration Tool Perspective"
+            class="net.sourceforge.datamig4zos.Perspective"
+            id="net.sourceforge.datamig4zos.Perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="org.eclipse.ui"
+            class="net.sourceforge.datamig4zos.ui.views.ServerExplorerView"
+            icon="images/server_explorer.gif"
+            id="net.sourceforge.datamig4zos.ui.views.ServerExplorerView"
+            name="Server Explorer"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="org.eclipse.ui"
+            class="net.sourceforge.datamig4zos.ui.views.ConsoleView"
+            icon="images/console_view.gif"
+            id="net.sourceforge.datamig4zos.ui.views.ConsoleView"
+            name="Console"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="org.eclipse.ui"
+            class="org.eclipse.ui.ExtensionFactory:progressView"
+            icon="images/progress_view.gif"
+            id="org.eclipse.ui.views.ProgressView"
+            name="Progress"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Open Request Wizard"
+            id="net.sourceforge.datamig4zos.actions.OpenRequestWizard"
+            name="Open Request Wizard">
+      </command>
+      <command
+            description="Open Request Editor"
+            id="net.sourceforge.datamig4zos.actions.OpenRequestEditor"
+            name="Open Request Editor">
+      </command>
+      <command
+            description="Open Server Editor"
+            id="net.sourceforge.datamig4zos.actions.OpenServerEditor"
+            name="Open Server Editor">
+      </command>
+      <command
+            description="Add New Server"
+            id="net.sourceforge.datamig4zos.actions.AddNewServer"
+            name="Add New Server">
+      </command>
+      <command
+            description="Save Server Changes"
+            id="net.sourceforge.datamig4zos.actions.SaveServerChanges"
+            name="Save Server Changes">
+      </command>
+      <command
+            description="Delete Existing Server"
+            id="net.sourceforge.datamig4zos.actions.DeleteExistingServer"
+            name="Delete Existing Server">
+      </command>
+      <command
+            description="Refresh Server Explorer"
+            id="net.sourceforge.datamig4zos.actions.RefreshServerExplorer"
+            name="Refresh Server Explorer">
+      </command>
+      <command
+            description="Start Data Migration"
+            id="net.sourceforge.datamig4zos.actions.StartDataMigration"
+            name="Start Data Migration">
+      </command>
+      <command
+            description="Item Receive From"
+            id="net.sourceforge.datamig4zos.actions.ItemReceiveFrom"
+            name="Item Receive From">
+      </command>
+      <command
+            description="Item Send To"
+            id="net.sourceforge.datamig4zos.actions.ItemSendTo"
+            name="Item Send To">
+      </command>
+      <command
+            description="Open Query Editor"
+            id="net.sourceforge.datamig4zos.actions.OpenQueryEditor"
+            name="Open Query Editor">
+      </command>
+      <command
+            description="Run Database Query"
+            id="net.sourceforge.datamig4zos.actions.RunDatabaseQuery"
+            name="Run Database Query">
+      </command>
+      <command
+            description="Save Query Results"
+            id="net.sourceforge.datamig4zos.actions.SaveQueryResults"
+            name="Save Query Results">
+      </command>
+      <command
+            description="Query Table Data"
+            id="net.sourceforge.datamig4zos.actions.QueryTableData"
+            name="Query Table Data">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="net.sourceforge.datamig4zos.actions.OpenRequestWizard"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+R">
+      </key>
+      <key
+            commandId="net.sourceforge.datamig4zos.actions.OpenQueryEditor"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Q">
+      </key>
+      <key
+            commandId="org.eclipse.ui.file.exit"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+F4">
+      </key>
+      <key
+            commandId="net.sourceforge.datamig4zos.actions.OpenServerEditor"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+F3">
+      </key>
+      <key
+            commandId="net.sourceforge.datamig4zos.actions.AddNewServer"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+F2">
+      </key>
+      <key
+            commandId="net.sourceforge.datamig4zos.actions.DeleteExistingServer"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+DEL">
+      </key>
+      <key
+            commandId="net.sourceforge.datamig4zos.actions.RefreshServerExplorer"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+F5">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="net.sourceforge.datamig4zos.ui.editors.RequestEditor"
+            icon="images/request_editor.gif"
+            id="net.sourceforge.datamig4zos.ui.editors.RequestEditor"
+            name="Request Editor">
+      </editor>
+      <editor
+            class="net.sourceforge.datamig4zos.ui.editors.ServerEditor"
+            icon="images/server_obj.gif"
+            id="net.sourceforge.datamig4zos.ui.editors.ServerEditor"
+            name="Server Editor">
+      </editor>
+      <editor
+            class="net.sourceforge.datamig4zos.ui.editors.QueryEditor"
+            icon="images/new_query.gif"
+            id="net.sourceforge.datamig4zos.ui.editors.QueryEditor"
+            name="Query Editor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <actionProvider
+            class="net.sourceforge.datamig4zos.ui.providers.ServerExplorerActionProvider"
+            id="net.sourceforge.datamig4zos.ServerExplorerAction">
+         <enablement>
+            <or>
+               <instanceof
+                     value="net.sourceforge.datamig4zos.objects.MFServer">
+               </instanceof>
+               <instanceof
+                     value="net.sourceforge.datamig4zos.objects.DB2Schema">
+               </instanceof>
+               <instanceof
+                     value="net.sourceforge.datamig4zos.objects.DB2Table">
+               </instanceof>
+               <adapt
+                     type="java.util.Collection">
+                  <count
+                        value="0">
+                  </count>
+               </adapt>
+            </or></enablement>
+      </actionProvider>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="net.sourceforge.datamig4zos.ui.providers.ServerExplorerContentProvider"
+            id="net.sourceforge.datamig4zos.ServerExplorerContent"
+            labelProvider="net.sourceforge.datamig4zos.ui.providers.ServerExplorerLabelProvider"
+            name="Server Explorer Content"
+            priority="normal"
+            providesSaveables="true">
+         <triggerPoints>
+            <instanceof
+                  value="net.sourceforge.datamig4zos.objects.CNFRoot">
+            </instanceof>
+            <instanceof
+                  value="net.sourceforge.datamig4zos.objects.MFServer">
+            </instanceof>
+            <instanceof
+                  value="net.sourceforge.datamig4zos.objects.DB2Schema">
+            </instanceof>
+         </triggerPoints>
+         <possibleChildren>
+            <instanceof
+                  value="net.sourceforge.datamig4zos.objects.MFServer">
+            </instanceof>
+            <instanceof
+                  value="net.sourceforge.datamig4zos.objects.DB2Schema">
+            </instanceof>
+            <instanceof
+                  value="net.sourceforge.datamig4zos.objects.DB2Table">
+            </instanceof>
+         </possibleChildren>
+      </navigatorContent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer
+            viewerId="net.sourceforge.datamig4zos.ui.views.ServerExplorerView">
+      </viewer>
+      <viewerContentBinding
+            viewerId="net.sourceforge.datamig4zos.ui.views.ServerExplorerView">
+         <includes>
+            <contentExtension
+                  isRoot="true"
+                  pattern="net.sourceforge.datamig4zos.ServerExplorerContent">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+      <viewerActionBinding
+            viewerId="net.sourceforge.datamig4zos.ui.views.ServerExplorerView">
+         <includes>
+            <actionExtension
+                  pattern="net.sourceforge.datamig4zos.ServerExplorerAction">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="net.sourceforge.datamig4zos.MFServerSelected">
+         <with
+               variable="selection">
+            <iterate
+                  ifEmpty="false"
+                  operator="or">
+               <instanceof
+                     value="net.sourceforge.datamig4zos.objects.MFServer">
+               </instanceof>
+            </iterate>
+         </with>
+      </definition>
+   </extension>
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="help/toc.xml"
+            primary="true">
+      </toc>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="net.sourceforge.datamig4zos.ui.preferences.DataMigPreferencePage"
+            id="net.sourceforge.datamig4zos.preferences.DataMigPreferencePage"
+            name="Data Migration">
+      </page>
+      <page
+            category="net.sourceforge.datamig4zos.preferences.DataMigPreferencePage"
+            class="net.sourceforge.datamig4zos.ui.preferences.PreferencePageParameters"
+            id="net.sourceforge.datamig4zos.ui.preferences.JclParametersPreferencePage"
+            name="JCL Parameters">
+      </page>
+      <page
+            category="net.sourceforge.datamig4zos.preferences.DataMigPreferencePage"
+            class="net.sourceforge.datamig4zos.ui.preferences.PreferencePageTemplates"
+            id="net.sourceforge.datamig4zos.ui.preferences.FileNamesPreferencePage"
+            name="JCL Templates">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="net.sourceforge.datamig4zos.ui.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+
+</plugin>

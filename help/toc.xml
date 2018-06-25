@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Data Migration Tool for z/OS" topic="help/html/toc.html">
+   <topic label="Overview">
+      <topic href="help/html/toc1a_overview.html" label="Process overview" />
+      <topic href="help/html/toc1b_workbench.html" label="The Workbench" />
+   </topic>
+   <topic label="Server Management">
+      <topic href="help/html/toc2a_server_explorer.html" label="Server Explorer" />
+      <topic href="help/html/toc2b_edit_a_server.html" label="Edit a server" />
+   </topic>
+   <topic label="Data Migration">
+      <topic href="help/html/toc3a_data_migration_request.html" label="Start a data migration request" />
+      <topic href="help/html/toc3b_monitor_data_migration.html" label="Monitor data migration status" />
+   </topic>
+   <topic label="Batch Query">
+      <topic href="help/html/toc4a_batch_query.html" label="Start a batch query" />
+      <topic href="help/html/toc4b_review_query_results.html" label="Review query results" />
+   </topic>
+   <topic label="Client Setup">
+   		<topic href="help/html/toc5a_data_initialization.html" label="Data initialization" />
+   		<topic href="help/html/toc5b_preferences.html" label="Preferences" />
+   </topic>
+   <topic label="Technical Details">
+      <topic href="help/html/toc6a_jes_transmission.html" label="JES transmission" />
+      <topic href="help/html/toc6b_job_names.html" label="Job names" />
+      <topic href="help/html/toc6c_jcl_parameters.html" label="JCL parameters" />
+      <topic href="help/html/toc6d_abend_handling.html" label="ABEND handling" />
+      <topic href="help/html/toc6e_client_security.html" label="Client security" />
+   </topic>
+</toc>
