@@ -100,7 +100,7 @@ public class ServerEditorInput implements IEditorInput {
 		return "Server " + server.getServerName() + ": " + server.getHostIp();
 	}
 
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Object getAdapter(Class adapter) {
 		return null;

@@ -134,8 +134,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolsMenu.add(preferencesAction);
         
         // Help
-        helpMenu.add(helpContentsAction);
-        helpMenu.add(helpSearchAction);
+        // Temporarily removed help menus - v7.0 beta
+        //helpMenu.add(helpContentsAction);
+        //helpMenu.add(helpSearchAction);
         helpMenu.add(new Separator());
         helpMenu.add(aboutAction);
 

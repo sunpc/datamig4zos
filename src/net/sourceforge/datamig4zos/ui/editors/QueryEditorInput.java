@@ -71,7 +71,7 @@ public class QueryEditorInput implements IEditorInput {
 		return "Run a database query";
 	}
 
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Object getAdapter(Class adapter) {
 		return null;

@@ -70,7 +70,7 @@ public class RequestEditorInput implements IEditorInput {
 		return "Submit a new data migration request";
 	}
 
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Object getAdapter(Class adapter) {
 		return null;

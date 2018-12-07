@@ -35,7 +35,7 @@ public class Perspective implements IPerspectiveFactory {
 		// layout.addStandaloneView(ConsoleView.ID, true, IPageLayout.BOTTOM,
 		// 0.35f, editorArea);
 		IFolderLayout folder = layout.createFolder("CPbar", IPageLayout.BOTTOM,
-				0.5f, editorArea);			// v6.0.phase4
+				0.25f, editorArea);			// v7.0 beta
 		// folder.addPlaceholder(View.ID + ":*");
 		folder.addView(IViewIds.VIEW_CONSOLE);
 		layout.addShowViewShortcut(IViewIds.VIEW_CONSOLE);
@@ -44,7 +44,7 @@ public class Perspective implements IPerspectiveFactory {
 
 		// create the server explorer view on the left
 		layout.addStandaloneView(IViewIds.VIEW_SERVER_EXPLORER, true, IPageLayout.LEFT,
-				0.35f, editorArea);
+				0.2f, editorArea);			// v7.0 beta
 		//layout.getViewLayout(ServerExplorerView.ID).setCloseable(false);
 		layout.addShowViewShortcut(IViewIds.VIEW_SERVER_EXPLORER);
 

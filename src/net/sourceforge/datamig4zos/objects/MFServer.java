@@ -48,10 +48,15 @@
  *  23. 11/07/2012: Add JCL parameters. (V6.1.1)
  *  24. 11/12/2012: Fix a bug that the user specified job name doesn't work. (V6.1.3) 
  *  25. 07/30/2013: Add a parameter to uploadFile to indicate LR. (V6.2)
+ *  26. 12/06/2018: Use Apache Commons Net for FTPS support. (V7.0 beta)
+ *  27. 12/07/2018: Add file protocol and port number. (V7.0.0)
  */
 package net.sourceforge.datamig4zos.objects;
 
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,8 +69,13 @@ import net.sourceforge.datamig4zos.ui.preferences.PreferenceConstants;
 import net.sourceforge.datamig4zos.util.DesEncrypter;
 import net.sourceforge.datamig4zos.util.TextProcessor;
 
-import com.enterprisedt.net.ftp.FTPTransferType;
-import com.enterprisedt.net.ftp.FileTransferClient;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPSClient;
+
+//import com.enterprisedt.net.ftp.FTPTransferType;
+//import com.enterprisedt.net.ftp.FileTransferClient;
 import com.enterprisedt.util.debug.Level;
 import com.enterprisedt.util.debug.Logger;
 
@@ -85,6 +95,9 @@ public class MFServer {
 	private String db_ssid = "";
 	private String jcl_header = "";
 	
+	private String file_protocol = "";	// v7.0.0
+	private int port_number = 0;		// v7.0.0
+	
 	private String param_db2load = "";	// v6.1.1
 	private String param_dsnload = "";	// v6.1.1
 	private String param_sortlib = "";	// v6.1.1
@@ -95,7 +108,10 @@ public class MFServer {
 
 	private Logger log = Logger.getLogger(MFServer.class);
 
-	private FileTransferClient ftp = new FileTransferClient();
+	// FTP client - v7.0 beta
+	// private FileTransferClient ftp = new FileTransferClient();
+	private FTPClient ftp = null;
+	private FTPSClient ftps = null;
 	
 	// constructor 0 - for dummy server - v6.0.phase5
 	public MFServer() throws Exception {		
@@ -124,6 +140,10 @@ public class MFServer {
 				db_ssid = rs.getString("DB_SSID");
 			if (jcl_header.equals(""))
 				jcl_header = rs.getString("JCL_HEADER");
+			if (file_protocol.equals(""))	// v7.0.0
+				file_protocol = rs.getString("FILE_PROTOCOL");
+			if (port_number == 0)			// v7.0.0
+				port_number = rs.getInt("PORT_NUMBER");
 			if (param_db2load.equals(""))	// v6.1.1
 				param_db2load = rs.getString("PARAM_DB2LOAD");
 			if (param_dsnload.equals(""))	// v6.1.1
@@ -142,7 +162,8 @@ public class MFServer {
 	// constructor 2 - for new server - v6.0.phase1
 	public MFServer(String serverName, String hostIp,
 			String logonUser, String logonPwd, String dbSsid, 
-			String jclHeader, String paramDb2load, String paramDsnload,
+			String jclHeader, String fileProtocol, int portNumber, 
+			String paramDb2load, String paramDsnload,
 			String paramSortlib, String paramSpace, String paramUnit) throws Exception {
 		server_name = serverName;
 		host_ip = hostIp;
@@ -150,6 +171,8 @@ public class MFServer {
 		logon_pwd = logonPwd;
 		db_ssid = dbSsid;
 		jcl_header = jclHeader;
+		file_protocol = fileProtocol;	// v7.0.0
+		port_number = portNumber;		// v7.0.0
 		param_db2load = paramDb2load;	// v6.1.1
 		param_dsnload = paramDsnload;	// v6.1.1
 		param_sortlib = paramSortlib;	// v6.1.1
@@ -161,10 +184,12 @@ public class MFServer {
 
 	// disconnect from server
 	public void closeConnection() throws Exception {
-		// Shut down client
+		// Shut down client - v7.0 beta
 		log.info("Quitting client");
-		if (ftp.isConnected())
+		if (ftp != null && ftp.isConnected())
 			ftp.disconnect();
+		if (ftps != null && ftps.isConnected())
+			ftps.disconnect();
 		//if (conn != null)		-- no need 
 		//	conn.shutdown();
 		log.info("Server connection closed");
@@ -173,22 +198,61 @@ public class MFServer {
 	// connect to server
 	public void connectServer() throws Exception {
 		// create client
-		log.info("Creating FTP client");
-		ftp.setRemoteHost(host_ip);
-		ftp.setUserName(logon_user);
-		ftp.setPassword(logon_pwd);
-		ftp.setContentType(FTPTransferType.ASCII);
+		// log.info("Creating FTP client");
+		// ftp.setRemoteHost(host_ip);
+		// ftp.setUserName(logon_user);
+		// ftp.setPassword(logon_pwd);
+		// ftp.setContentType(FTPTransferType.ASCII);
 
-		// connect
+		// connect - v7.0 beta
 		log.info("Connecting to server " + host_ip);
 		try {
-			ftp.connect();
+			// create new FTP client - v7.0.0
+			if (this.file_protocol.equals("FTP")) {
+				if (ftp == null)
+					ftp = new FTPClient();
+				// ftp.connect();
+				ftp.connect(host_ip, port_number);
+				// login
+				if (ftp.login(logon_user, logon_pwd)) {
+					log.info("Connected and logged in to server " + host_ip);
+				} else {
+					throw new IOException("Could not log in to server, RC=" + ftp.getReplyCode());
+				}
+				// set to ASCII
+				if (ftp.setFileType(FTP.ASCII_FILE_TYPE)) {
+					log.info("Set file type to ASCII");
+				} else {
+					throw new IOException("Could not set file type, RC=" + ftp.getReplyCode());
+				}
+			} else if (this.file_protocol.equals("FTPS")) {
+				if (ftps == null)
+					ftps = new FTPSClient();
+				// ftp.connect();
+				ftps.connect(host_ip, port_number);
+				// login
+				if (ftps.login(logon_user, logon_pwd)) {
+					log.info("Connected and logged in to server " + host_ip);
+				} else {
+					throw new IOException("Could not log in to server, RC=" + ftp.getReplyCode());
+				}
+				// set to ASCII
+				if (ftps.setFileType(FTP.ASCII_FILE_TYPE)) {
+					log.info("Set file type to ASCII");
+				} else {
+					throw new IOException("Could not set file type, RC=" + ftp.getReplyCode());
+				}
+				// for FTPS - v7.0 beta
+				ftps.execPBSZ(0);
+				ftps.execPROT("P");
+			}
 		} catch (Exception ex) {
-			ftp.disconnect();
+			if (ftp != null && ftp.isConnected())
+				ftp.disconnect();
+			if (ftps != null && ftps.isConnected())
+				ftps.disconnect();
 			throw ex;
 		}
-		log.info("Connected and logged in to server " + host_ip);
-
 	}
 
 	// delete server from hsql - v6.0.p1
@@ -203,7 +267,6 @@ public class MFServer {
 	// display all the variables
 	public void displayServerDetail() throws Exception {
 		log.info("Displaying Server Details");
-
 		System.out.println("SERVER_NAME     = " + server_name);
 		System.out.println("HOST_IP         = " + host_ip);
 		System.out.println("LOGON_USER      = " + logon_user);
@@ -217,16 +280,26 @@ public class MFServer {
 			throws Exception {
 		String command_line = "SITE FILETYPE=SEQ";
 
-		// check if connected
-		if (!ftp.isConnected()) {
-			ftp.connect();
+		// check if connected - v7.0 beta
+		if ((ftp != null && !ftp.isConnected()) || (ftps != null && !ftps.isConnected())) {
+			this.connectServer();
 		}
-		// download
-		log.info("QUOTA " + command_line);
-		log.info(ftp.executeCommand(command_line));
+		// download - v7.0 beta
+		log.info("QUOTE " + command_line);
+		// log.info(ftp.executeCommand(command_line));
+		if (ftp != null)
+			ftp.sendCommand(command_line);
+		else if (ftps != null)
+			ftps.sendCommand(command_line);
 		log.info("Downloading " + localFileName + " From " + serverDatasetName);
-		ftp.downloadFile(localFileName, serverDatasetName);
-		log.info(serverDatasetName + "downloaded");
+		// ftp.downloadFile(localFileName, serverDatasetName);
+		FileOutputStream output = new FileOutputStream(localFileName);
+		if (ftp != null)
+			ftp.retrieveFile(serverDatasetName, output);
+		else if (ftps != null)
+			ftps.retrieveFile(serverDatasetName, output);
+		output.close();
+		log.info(serverDatasetName + " downloaded");
 	}
 
 	@Override
@@ -252,6 +325,8 @@ public class MFServer {
 				+ DesEncrypter.encrypt(logon_pwd) + "','" 
 				+ db_ssid + "','" 
 				+ TextProcessor.replaceStr(jcl_header, "'", "''") + "','"	// v6.0.0
+				+ file_protocol + "',"		// v7.0.0
+				+ port_number + ",'"		// v7.0.0
 				+ param_db2load + "','" 	// v6.1.1
 				+ param_dsnload + "','" 	// v6.1.1
 				+ param_sortlib + "','" 	// v6.1.1
@@ -274,36 +349,47 @@ public class MFServer {
 		String command_line = "SITE FILETYPE=SEQ";
 		String[][] return_array = new String[0][0];
 
-		// check if connected
-		if (!ftp.isConnected()) {
-			ftp.connect();
+		// check if connected - v7.0 beta
+		if ((ftp != null && !ftp.isConnected()) || (ftps != null && !ftps.isConnected())) {
+			this.connectServer();
 		}
-		// count
-		log.info("QUOTA " + command_line);
-		log.info(ftp.executeCommand(command_line));
+		
+		// count - v7.0 beta
+		log.info("QUOTE " + command_line);
+		// log.info(ftp.executeCommand(command_line));
+		if (ftp != null)
+			ftp.sendCommand(command_line);
+		else if (ftps != null)
+			ftps.sendCommand(command_line);		
 
 		// verify if the filename is valid - V5.0RC2
 		if (fileName == null || fileName.trim().length() == 0)
 			return return_array;
 
-		// get file list from server
+		// get file list from server - v7.0 beta
 		log.info("Listing " + fileName);
 		
-		String[] files = new String [0];
-		try {	// cater for PDS library
-			files = ftp.directoryNameList(fileName, true);
-		} catch (Exception ex) {
-		}
+		//String[] files = new String [0];
+		//try {	// cater for PDS library
+		//	files = ftp.directoryNameList(fileName, true);
+		//} catch (Exception ex) {
+		//}
+		FTPFile[] files = null;
+		if (ftp != null)
+			files = ftp.listFiles(fileName);
+		else if (ftps != null)
+			files = ftps.listFiles(fileName);
 		
-		int total_cnt;
-		if (files.length > 0)
-			total_cnt = files.length - 1; // get rid of the header
-		else
-			total_cnt = 0;
+		int total_cnt = files.length;
+		// if (files.length > 0)
+		//	total_cnt = files.length - 1; // get rid of the header
+		// else
+		//	total_cnt = 0;
 		
 		log.info("Current total file count: " + total_cnt);
-		for (int i = 0; i < files.length; i++) {
-			System.out.println(files[i]);
+		
+		for (int i = 0; i < total_cnt; i++) {
+			System.out.println(files[i].getRawListing());
 		}
 
 		// get file info
@@ -311,11 +397,11 @@ public class MFServer {
 			return_array = new String[total_cnt][4];
 		for (int i = 1; i < files.length; i++) {
 			// read current file
-			return_array[i - 1][0] = files[i].substring(56, files[i].length())
-					.trim(); // filename
-			return_array[i - 1][1] = files[i].substring(39, 44).trim(); // Lrecl
-			return_array[i - 1][2] = files[i].substring(45, 50).trim(); // BlkSz
-			return_array[i - 1][3] = files[i].substring(33, 38).trim(); // Recfm
+			String currFileName = files[i].getRawListing();	// v7.0 beta
+			return_array[i - 1][0] = currFileName.substring(56, currFileName.length()).trim(); // filename
+			return_array[i - 1][1] = currFileName.substring(39, 44).trim(); // Lrecl
+			return_array[i - 1][2] = currFileName.substring(45, 50).trim(); // BlkSz
+			return_array[i - 1][3] = currFileName.substring(33, 38).trim(); // Recfm
 		}
 
 		return return_array;
@@ -345,16 +431,39 @@ public class MFServer {
 
 		String command_line = "SITE FILETYPE=JES";
 
-		// check if connected
-		if (!ftp.isConnected()) {
-			ftp.connect();
+		// check if connected - v7.0 beta
+		if ((ftp != null && !ftp.isConnected()) || (ftps != null && !ftps.isConnected())) {
+			this.connectServer();
 		}
-		// submit
-		log.info("QUOTA " + command_line);
-		log.info(ftp.executeCommand(command_line));
-		log.info("Submitting " + jobFileName);
-		ftp.uploadFile(jobFileName, jobFileName);
-		log.info("Submitted");
+		// submit - v7.0 beta
+		log.info("QUOTE " + command_line);
+		// log.info(ftp.executeCommand(command_line));
+		int rc = -1;
+		if (ftp != null)
+			rc = ftp.sendCommand(command_line);
+		else if (ftps != null)
+			rc = ftps.sendCommand(command_line);
+		log.info("QUOTE RC=" + rc);
+		//ftp.uploadFile(jobFileName, jobFileName);
+		FileInputStream input = new FileInputStream(new File(jobFileName));
+		String jobName = new File(jobFileName).getName();	
+		log.info("Submitting " + jobName);
+		boolean storeRC = false;
+		if (ftp != null)
+			storeRC = ftp.storeFile(jobName, input);
+		else if (ftps != null)
+			storeRC = ftps.storeFile(jobName, input);		
+		if (storeRC) {
+			log.info("Job submitted");
+		} else {
+			int replyCode = -1;
+			if (ftp != null)
+				replyCode = ftp.getReplyCode();
+			else if (ftps != null)
+				replyCode = ftps.getReplyCode();
+			throw new IOException("Job submission failed, RC=" + replyCode);
+		}
+		input.close();
 	}
 
 	// upload a file
@@ -363,21 +472,34 @@ public class MFServer {
 
 		String command_line = "";
 
-		// check if connected
-		if (!ftp.isConnected()) {
-			ftp.connect();
+		// check if connected - v7.0 beta
+		if ((ftp != null && !ftp.isConnected()) || (ftps != null && !ftps.isConnected())) {
+			this.connectServer();
 		}
-		// upload
+		// upload - v7.0 beta
 		command_line = "SITE FILETYPE=SEQ";
-		log.info("QUOTA " + command_line);
-		log.info(ftp.executeCommand(command_line));
+		log.info("QUOTE " + command_line);
+		// log.info(ftp.executeCommand(command_line));
+		if (ftp != null)
+			ftp.sendCommand(command_line);
+		else if (ftps != null)
+			ftps.sendCommand(command_line);		
 
 		command_line = "SITE LR=" + recordLength;		// v6.2
-		log.info("QUOTA " + command_line);				// v6.2
-		log.info(ftp.executeCommand(command_line));		// v6.2
+		log.info("QUOTE " + command_line);				// v6.2
+		// log.info(ftp.executeCommand(command_line));		// v6.2
+		if (ftp != null)
+			ftp.sendCommand(command_line);
+		else if (ftps != null)
+			ftps.sendCommand(command_line);	
 		
 		log.info("Uploading " + localFileName + " To " + serverDatasetName);
-		ftp.uploadFile(localFileName, serverDatasetName);
+		// ftp.uploadFile(localFileName, serverDatasetName);
+		FileInputStream input = new FileInputStream(new File(localFileName));
+		if (ftp != null)
+			ftp.storeFile(serverDatasetName, input);
+		else if (ftps != null)
+			ftps.storeFile(serverDatasetName, input);
 		log.info(localFileName + " Uploaded");
 	}
 	
@@ -545,6 +667,22 @@ public class MFServer {
 
 	public void setJclHeader(String jclHeader) {
 		jcl_header = jclHeader;
+	}
+	
+	public String getFileProtocol() {		// v7.0.0
+		return file_protocol;
+	}
+
+	public void setFileProtocol(String fileProtocol) {	// v7.0.0
+		file_protocol = fileProtocol;
+	}
+	
+	public int getPortNumber() {			// v7.0.0
+		return port_number;
+	}
+
+	public void setPortNumber(int portNumber) {		// v7.0.0
+		port_number = portNumber;
 	}
 	
 	// get a schema - v6.0.phase4
@@ -800,6 +938,8 @@ public class MFServer {
 			String logon_pwd = DesEncrypter.decrypt(rs.getString("LOGON_PWD"));
 			String db_ssid = rs.getString("DB_SSID");
 			String jcl_header = rs.getString("JCL_HEADER");
+			String file_protocol = rs.getString("FILE_PROTOCOL");		// v7.0.0
+			int port_number = rs.getInt("PORT_NUMBER");					// v7.0.0
 			String param_db2load = rs.getString("PARAM_DB2LOAD");		// v6.1.1
 			String param_dsnload = rs.getString("PARAM_DSNLOAD");		// v6.1.1
 			String param_sortlib = rs.getString("PARAM_SORTLIB");		// v6.1.1
@@ -807,7 +947,7 @@ public class MFServer {
 			String param_unit = rs.getString("PARAM_UNIT");				// v6.1.1
 			
 			new_servers[row_id] = new MFServer(server_name, host_ip,
-					 logon_user, logon_pwd, db_ssid, jcl_header, 
+					 logon_user, logon_pwd, db_ssid, jcl_header, file_protocol, port_number, 
 					 param_db2load, param_dsnload, param_sortlib, param_space, param_unit);		// v6.1.1
 			new_servers[row_id].setRoot(root);
 			row_id++;

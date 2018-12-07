@@ -54,9 +54,12 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Font;
@@ -97,6 +100,9 @@ public class ServerEditorPageOverview extends EditorPart {
 	private Text txt_pwd;
 	private Text txt_ssid;
 	private Text txt_jcl;
+	
+	private Text txt_port;		// v7.0.0
+	private CCombo cmb_protocol;	// v7.0.0
 	
 	private Text txt_db2load;	// v6.1.1
 	private Text txt_dsnload;	// v6.1.1
@@ -187,14 +193,14 @@ public class ServerEditorPageOverview extends EditorPart {
 		Composite sectionClient = toolkit.createComposite(section1);
 		
 		GridLayout gl1 = new GridLayout();
-		gl1.numColumns = 2; 			// v6.0.phase4
-		gl1.horizontalSpacing = 10; 	// v6.0.phase2
+		gl1.numColumns = 4; 			// v6.0.phase4	// v7.0.0
+		gl1.horizontalSpacing = 30; 	// v6.0.phase2
 		sectionClient.setLayout(gl1);
 		GridData gd1 = new GridData();
-		gd1.widthHint = 150; 			// v6.0.phase2
+		gd1.widthHint = 180; 			// v6.0.phase2
 
 		// server detail form
-		toolkit.createLabel(sectionClient, "Server Name: ");
+		toolkit.createLabel(sectionClient, "Server name: ");
 		txt_name = toolkit.createText(sectionClient, server.getServerName());
 		txt_name.setTextLimit(8);		// v6.0.0
 		txt_name.setLayoutData(gd1);
@@ -223,8 +229,13 @@ public class ServerEditorPageOverview extends EditorPart {
 				}
 			}
 		});
-
-		toolkit.createLabel(sectionClient, "Host IP: ");
+		
+		// filler - v7.0.0
+		toolkit.createLabel(sectionClient, "");
+		toolkit.createLabel(sectionClient, "");
+		
+		// host name
+		toolkit.createLabel(sectionClient, "Host name: ");
 		txt_host = toolkit.createText(sectionClient, server.getHostIp());
 		txt_host.setLayoutData(gd1);
 		txt_host.addKeyListener(new KeyListener() {
@@ -250,8 +261,37 @@ public class ServerEditorPageOverview extends EditorPart {
 				}
 			}
 		});
+		
+		// port - v7.0.0
+		toolkit.createLabel(sectionClient, "Port number: ");
+		txt_port = toolkit.createText(sectionClient, String.valueOf(server.getPortNumber()));
+		txt_port.setLayoutData(gd1);
+		txt_port.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
 
-		toolkit.createLabel(sectionClient, "Logon User ID: ");			// v6.0.1
+			@Override
+			public void keyReleased(KeyEvent e) {
+				server.setPortNumber(Integer.parseInt(txt_port.getText().trim()));
+			}
+			
+		});
+		txt_port.addVerifyListener(new VerifyListener() {
+			@Override
+			public void verifyText(VerifyEvent e) {
+				char c = e.character;
+				if (Character.isISOControl(c) || Character.isDigit(c)) {
+					e.doit = true;
+				} else {
+					e.doit = false;
+				}
+			}
+		});
+
+		// user name
+		toolkit.createLabel(sectionClient, "User name: ");			// v6.0.1
 		txt_user = toolkit.createText(sectionClient, server.getLogonUser());
 		txt_user.setTextLimit(8);		// v6.0.0
 		txt_user.setLayoutData(gd1);
@@ -281,7 +321,8 @@ public class ServerEditorPageOverview extends EditorPart {
 			}	            
 		});
 
-		toolkit.createLabel(sectionClient, "Logon Password: ");
+		// password
+		toolkit.createLabel(sectionClient, "Password: ");
 		txt_pwd = toolkit.createText(sectionClient, server.getLogonPwd(), SWT.PASSWORD);
 		txt_pwd.setTextLimit(8);		// v6.0.0
 		txt_pwd.setLayoutData(gd1);
@@ -297,10 +338,49 @@ public class ServerEditorPageOverview extends EditorPart {
 			}
 			
 		});
+		
+		// file protocol - v7.0.0
+		toolkit.createLabel(sectionClient, "File protocol: ");
+		cmb_protocol = new CCombo(sectionClient, SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
+		cmb_protocol.setLayoutData(gd1);
+		cmb_protocol.add("FTP", 0);
+		cmb_protocol.add("FTP TLS/SSL encryption", 1);
+		
+		cmb_protocol.addSelectionListener(new SelectionListener() {
 
-		toolkit.createLabel(sectionClient, "Database SSID: ");
-		txt_ssid = toolkit.createText(sectionClient, server
-				.getDbSsid());
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (cmb_protocol.getSelectionIndex() == 0) {
+					server.setFileProtocol("FTP");
+					server.setPortNumber(21);
+					txt_port.setText("21");
+				} else if (cmb_protocol.getSelectionIndex() == 1) {
+					server.setFileProtocol("FTPS");
+					server.setPortNumber(990);
+					txt_port.setText("990");
+				}				
+			}
+			
+		});
+		
+		if (server.getFileProtocol().equals("FTP")) {
+			cmb_protocol.select(0);
+		} else if (server.getFileProtocol().equals("FTPS")) {
+			cmb_protocol.select(1);
+		} else {
+			cmb_protocol.select(0);
+			server.setFileProtocol("FTP");
+			server.setPortNumber(21);
+			txt_port.setText("21");
+		}
+
+		// db2 ssid
+		toolkit.createLabel(sectionClient, "DB2 SSID: ");
+		txt_ssid = toolkit.createText(sectionClient, server.getDbSsid());
 		txt_ssid.setLayoutData(gd1);
 		txt_ssid.addKeyListener(new KeyListener() {
 			

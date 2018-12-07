@@ -12,32 +12,16 @@
                value="images/data-transport-icon-16.png,images/data-transport-icon-32.png,images/data-transport-icon-48.png,images/data-transport-icon-64.png,images/data-transport-icon-128.png">
          </property>
          <property
-               name="preferenceCustomization"
-               value="plugin_customization.ini">
-         </property>
-         <property
-               name="appName"
-               value="Data Migration Tool for z/OS">
+               name="aboutText"
+               value="Data Migration Tool for z/OS&#x0A;&#x0A;Version: 7.0.0&#x0A;Build: 20181206&#x0A;&#x0A;(c) 2008-2018 Peng Cheng Sun.  All rights reserved&#x0A;Visit http://sourceforge.net/projects/datamig4zos/&#x0A;&#x0A;This product includes software developed by&#x0A;The Eclipse Foundation http://eclipse.org/&#x0A;The hsql Development Group http://hsqldb.org/&#x0A;Enterprise Distributed Technologies http://enterprisedt.com/&#x0A;Apache Commons https://commons.apache.org/">
          </property>
          <property
                name="aboutImage"
                value="images/data-transport-lg.gif">
          </property>
          <property
-               name="aboutText"
-               value="Data Migration Tool for z/OS&#x0A;&#x0A;Version: 6.3.1&#x0A;Build id: 20141114&#x0A;&#x0A;(c) 2008-2014 Peng Cheng Sun.  All rights reserved.&#x0A;Visit http://sourceforge.net/projects/datamig4zos/&#x0A;&#x0A;This product includes software developed by&#x0A;The Eclipse Foundation http://eclipse.org/&#x0A;The hsql Development Group http://hsqldb.org/&#x0A;Enterprise Distributed Technologies http://enterprisedt.com/">
-         </property>
-         <property
-               name="startupForegroundColor"
-               value="C0C0C0">
-         </property>
-         <property
-               name="startupMessageRect"
-               value="5,272,400,20">
-         </property>
-         <property
-               name="startupProgressRect"
-               value="5,252,400,15">
+               name="appName"
+               value="Data Migration Tool for z/OS">
          </property>
       </product>
    </extension>
@@ -50,6 +34,28 @@
                class="net.sourceforge.datamig4zos.Application">
          </run>
       </application>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="net.sourceforge.datamig4zos.ui.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="net.sourceforge.datamig4zos.MFServerSelected">
+         <with
+               variable="selection">
+            <iterate
+                  ifEmpty="false"
+                  operator="or">
+               <instanceof
+                     value="net.sourceforge.datamig4zos.objects.MFServer">
+               </instanceof>
+            </iterate>
+         </with>
+      </definition>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
@@ -308,22 +314,6 @@
       </viewerActionBinding>
    </extension>
    <extension
-         point="org.eclipse.core.expressions.definitions">
-      <definition
-            id="net.sourceforge.datamig4zos.MFServerSelected">
-         <with
-               variable="selection">
-            <iterate
-                  ifEmpty="false"
-                  operator="or">
-               <instanceof
-                     value="net.sourceforge.datamig4zos.objects.MFServer">
-               </instanceof>
-            </iterate>
-         </with>
-      </definition>
-   </extension>
-   <extension
          point="org.eclipse.help.toc">
       <toc
             file="help/toc.xml"
@@ -349,12 +339,6 @@
             id="net.sourceforge.datamig4zos.ui.preferences.FileNamesPreferencePage"
             name="JCL Templates">
       </page>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="net.sourceforge.datamig4zos.ui.preferences.PreferenceInitializer">
-      </initializer>
    </extension>
 
 </plugin>
